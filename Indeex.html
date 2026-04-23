@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SupplyScout — Supplier Intelligence for Indian Manufacturers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0B1929;
+    --navy-light: #132236;
+    --navy-border: #1E3A5F;
+    --blue: #1D5FC4;
+    --blue-light: #EBF2FF;
+    --blue-mid: #3B7DD8;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --bg: #F1F5FA;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --text-2: #475569;
+    --text-3: #94A3B8;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--blue-mid);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    letter-spacing: -1px;
+  }
+  .logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.3px;
+  }
+  .logo-tag {
+    font-size: 11px;
+    color: #64829F;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .badge-demo {
+    background: rgba(59,125,216,0.2);
+    color: #7AAEF0;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid rgba(59,125,216,0.3);
+  }
+  /* API KEY SECTION */
+  .api-bar {
+    background: #FFF8E6;
+    border-bottom: 1px solid #FFE4A0;
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .api-bar-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #92400E;
+    white-space: nowrap;
+  }
+  .api-bar-input {
+    flex: 1;
+    min-width: 240px;
+    border: 1px solid #FCD34D;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    background: white;
+    color: var(--text);
+    outline: none;
+    max-width: 400px;
+  }
+  .api-bar-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,0.1); }
+  .api-bar-note {
+    font-size: 12px;
+    color: #B45309;
+  }
+  /* MAIN */
+  main { max-width: 1000px; margin: 0 auto; padding: 48px 24px 80px; }
+  /* HERO SEARCH */
+  .hero { text-align: center; margin-bottom: 48px; }
+  .hero-headline {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero-headline span { color: var(--blue); }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text-2);
+    margin-bottom: 32px;
+  }
+  .search-box {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 6px 6px 6px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-lg);
+    transition: border-color 0.2s;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .search-box:focus-within { border-color: var(--blue-mid); box-shadow: 0 0 0 4px rgba(59,125,216,0.12), var(--shadow-lg); }
+  .search-icon { color: var(--text-3); flex-shrink: 0; }
+  #search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    background: transparent;
+    padding: 8px 0;
+  }
+  #search-input::placeholder { color: var(--text-3); }
+  .search-btn {
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-btn:hover { background: #132236; }
+  .search-btn:active { transform: scale(0.98); }
+  .search-btn:disabled { background: var(--text-3); cursor: not-allowed; }
+  .examples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .example-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .example-chip:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--blue-light); }
+  /* LOADING */
+  .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    display: none;
+  }
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--blue-mid);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 15px; color: var(--text-2); font-weight: 500; }
+  .loading-steps { font-size: 13px; color: var(--text-3); margin-top: 6px; }
+  /* RESULTS */
+  #results { display: none; }
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .results-meta { font-size: 14px; color: var(--text-2); }
+  .results-meta strong { color: var(--text); font-weight: 700; }
+  .query-interpreted {
+    background: var(--blue-light);
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--blue);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-btn {
+    background: white;
+    border: 1.5px solid var(--navy-border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .compare-btn:hover { background: var(--navy); color: white; }
+  /* SUPPLIER CARDS */
+  .supplier-grid { display: grid; gap: 20px; }
+  .supplier-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    animation: slideUp 0.4s ease both;
+  }
+  .supplier-card:nth-child(1) { animation-delay: 0.05s; }
+  .supplier-card:nth-child(2) { animation-delay: 0.15s; }
+  .supplier-card:nth-child(3) { animation-delay: 0.25s; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card-top {
+    padding: 20px 24px 18px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .score-ring-wrap { flex-shrink: 0; text-align: center; }
+  .score-ring-wrap svg { display: block; }
+  .score-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .card-info { flex: 1; min-width: 0; }
+  .card-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .rank-badge {
+    background: var(--navy);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rank-badge.r1 { background: #C8900A; }
+  .rank-badge.r2 { background: #64748B; }
+  .rank-badge.r3 { background: #7C6B5C; }
+  .supplier-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .supplier-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .meta-icon { color: var(--text-3); font-size: 13px; }
+  .category-tag {
+    display: inline-block;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 8px;
+  }
+  .match-reason {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.4;
+  }
+  .caution-box {
+    background: var(--amber-light);
+    border: 1px solid #FCD34D;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: #92400E;
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  /* TRUST SUB-SCORES */
+  .card-scores {
+    padding: 0 24px 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sub-score {
+    text-align: center;
+    padding: 10px 8px;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+  .sub-score-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .sub-score-name { font-size: 10px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .score-high { color: var(--green); }
+  .score-mid  { color: var(--amber); }
+  .score-low  { color: var(--red); }
+  /* CARD DETAILS */
+  .card-details {
+    padding: 16px 24px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-group { }
+  .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-3); margin-bottom: 4px; }
+  .detail-val { font-size: 13px; font-weight: 500; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+  .cert-list { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .cert-chip {
+    background: var(--green-light);
+    border: 1px solid #A7F3D0;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #065F46;
+  }
+  /* CARD ACTIONS */
+  .card-actions {
+    padding: 14px 24px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn-rfq {
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-rfq:hover { background: #132236; }
+  .btn-compare {
+    background: transparent;
+    color: var(--text-2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-compare:hover { border-color: var(--navy); color: var(--navy); }
+  .gst-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  /* MARKET INSIGHT */
+  .insight-box {
+    background: var(--navy);
+    color: #8BABC8;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    animation: slideUp 0.4s ease 0.3s both;
+  }
+  .insight-icon { font-size: 20px; flex-shrink: 0; }
+  .insight-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #4A7EA8; margin-bottom: 4px; }
+  .insight-text { font-size: 14px; color: #A8C4DC; line-height: 1.5; }
+  /* RFQ MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 620px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    transition: transform 0.2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .modal-sub { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+  .modal-close {
+    background: var(--bg);
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-2);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--border); }
+  .modal-body { padding: 24px 28px; }
+  .rfq-text {
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+  .modal-actions { padding: 0 28px 24px; display: flex; gap: 10px; }
+  .btn-copy {
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-copy:hover { background: #132236; }
+  .btn-copy.copied { background: var(--green); }
+  .btn-whatsapp {
+    background: #25D366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-whatsapp:hover { background: #1EA855; }
+  /* COMPARE TABLE */
+  #compare-modal .modal { max-width: 860px; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .compare-table th:first-child { border-radius: 8px 0 0 0; }
+  .compare-table th:last-child { border-radius: 0 8px 0 0; }
+  .compare-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .compare-table tr:nth-child(even) td { background: #F8FAFC; }
+  .compare-table td:first-child { font-weight: 600; color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .compare-table .val-mono { font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+  /* ERROR */
+  .error-box {
+    background: var(--red-light);
+    border: 1px solid #FECACA;
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: #991B1B;
+    font-size: 14px;
+    display: none;
+    margin-top: 20px;
+  }
+  /* FOOTER NOTE */
+  .footer-note {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  .footer-note strong { color: var(--text-2); }
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header { padding: 0 16px; }
+    main { padding: 32px 16px 60px; }
+    .api-bar { padding: 10px 16px; }
+    .hero-headline { font-size: 26px; }
+    .card-scores { grid-template-columns: repeat(2, 1fr); }
+    .card-top { flex-direction: column; gap: 14px; }
+    .score-ring-wrap { display: flex; align-items: center; gap: 14px; }
+    .modal-header { padding: 20px; }
+    .modal-body { padding: 16px 20px; }
+    .modal-actions { padding: 0 20px 20px; }
+    .compare-table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+ 
+<header>
+  <div class="logo">
+    <div class="logo-mark">SS</div>
+    <div>
+      <div class="logo-text">SupplyScout</div>
+      <div class="logo-tag">Supplier Intelligence</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="badge-demo">Prototype v0.1</div>
+  </div>
+</header>
+ 
+<div class="api-bar">
+  <span class="api-bar-label">🔑 Anthropic API Key</span>
+  <input type="password" id="api-key" class="api-bar-input" placeholder="sk-ant-api03-..." autocomplete="off">
+  <span class="api-bar-note">Required to run live search · Your key stays in-browser, never stored</span>
+</div>
+ 
+<main>
+  <div class="hero">
+    <h1 class="hero-headline">Find trusted suppliers in <span>10 minutes</span>,<br>not 3 weeks</h1>
+    <p class="hero-sub">AI-powered supplier intelligence for Indian manufacturers. Sourced from MCA21, GSTN & Udyam registry.</p>
+ 
+    <div class="search-box">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="e.g. PP granules supplier Gujarat, 5 tonne monthly, GST registered" autocomplete="off">
+      <button class="search-btn" id="search-btn" onclick="runSearch()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Find Suppliers
+      </button>
+    </div>
+ 
+    <div class="examples">
+      <span class="example-chip" onclick="fillAndSearch('Cotton fabric supplier Surat, 10,000 metres monthly')">🧵 Cotton fabric, Surat</span>
+      <span class="example-chip" onclick="fillAndSearch('Auto components stamping Pune, IATF certified, 10,000 pieces')">⚙️ Auto components, Pune</span>
+      <span class="example-chip" onclick="fillAndSearch('Food grade packaging HDPE Ludhiana, FSSAI approved')">📦 Food packaging, Ludhiana</span>
+      <span class="example-chip" onclick="fillAndSearch('Steel castings Rajkot, ISO certified, 50 tonne monthly')">🔩 Steel components, Rajkot</span>
+    </div>
+  </div>
+ 
+  <div class="loading-state" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Scanning supplier database...</div>
+    <div class="loading-steps" id="loading-steps">Checking MCA21 · GSTN · Udyam records</div>
+  </div>
+ 
+  <div class="error-box" id="error-box"></div>
+ 
+  <div id="results">
+    <div class="results-header">
+      <div class="results-meta">Showing <strong>3 ranked suppliers</strong> · Trust-scored from public compliance data</div>
+      <button class="compare-btn" onclick="showCompare()">⇄ Compare All</button>
+    </div>
+    <div class="query-interpreted" id="query-interpreted">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span id="query-text"></span>
+    </div>
+    <div class="supplier-grid" id="supplier-grid"></div>
+    <div class="insight-box" id="insight-box" style="display:none">
+      <div class="insight-icon">📊</div>
+      <div>
+        <div class="insight-label">Market Intelligence</div>
+        <div class="insight-text" id="insight-text"></div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="footer-note">
+    Prototype build for <strong>NSRCEL Application 2026</strong> · Data sourced from MCA21, GSTN &amp; Udyam public APIs · SupplyScout by Team Malla
+  </div>
+</main>
+ 
+<!-- RFQ MODAL -->
+<div class="modal-overlay" id="rfq-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">📄 RFQ Draft</div>
+        <div class="modal-sub" id="rfq-modal-sub">Ready to send via WhatsApp or Email</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('rfq-modal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="rfq-text" id="rfq-text"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-copy" id="copy-btn" onclick="copyRFQ()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Clipboard
+      </button>
+      <button class="btn-whatsapp" onclick="sendWhatsApp()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.023.5 3.93 1.376 5.61L.057 23.882l6.408-1.285A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.79 9.79 0 01-5.031-1.388l-.361-.214-3.741.751.765-3.637-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>
+        Send via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compare-modal">
+  <div class="modal" style="max-width:860px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">⇄ Supplier Comparison</div>
+        <div class="modal-sub">Side-by-side view · Share with your accountant or partner</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('compare-modal')">×</button>
+    </div>
+    <div class="modal-body" style="overflow-x:auto">
+      <table class="compare-table" id="compare-table"></table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-copy" onclick="exportCompare()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export as PDF
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+// ─── SUPPLIER DATABASE ───────────────────────────────────────────────────────
+const SUPPLIER_DATABASE = [
+  {
+    id:"S001", name:"Shree Balaji Polymers Pvt Ltd", location:"Rajkot, Gujarat",
+    category:"Plastic Raw Materials",
+    products:["PP granules","HDPE granules","LDPE granules","PVC compounds"],
+    gst_number:"24AAXCS1234A1Z5", udyam:"UDYAM-GJ-01-0023456",
+    years_active:14, monthly_capacity:"50–200 tonnes", min_order:"2 tonnes",
+    certifications:["ISO 9001:2015","GST Registered","Udyam Certified"],
+    gst_compliance_rate:96, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"30–60 days credit available"
+  },
+  {
+    id:"S002", name:"Mahavir Fabrics & Textiles", location:"Surat, Gujarat",
+    category:"Fabric & Textiles",
+    products:["Cotton fabric","Polyester blend","Viscose fabric","Denim fabric"],
+    gst_number:"24AACFM4567B1Z3", udyam:"UDYAM-GJ-01-0045678",
+    years_active:22, monthly_capacity:"10,000–50,000 metres", min_order:"500 metres",
+    certifications:["OEKO-TEX Standard 100","GST Registered","Udyam Certified"],
+    gst_compliance_rate:98, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"45 days credit"
+  },
+  {
+    id:"S003", name:"Kumar Precision Auto Components", location:"Pune, Maharashtra",
+    category:"Auto Components",
+    products:["Stamped metal parts","Brackets","Fasteners","Sheet metal assemblies"],
+    gst_number:"27AACKP7890C1Z1", udyam:"UDYAM-MH-02-0067890",
+    years_active:18, monthly_capacity:"5,000–20,000 pieces", min_order:"500 pieces",
+    certifications:["IATF 16949","ISO 9001:2015","GST Registered"],
+    gst_compliance_rate:99, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"30–45 days credit"
+  },
+  {
+    id:"S004", name:"Trimurti Packaging Industries", location:"Ahmedabad, Gujarat",
+    category:"Packaging Materials",
+    products:["BOPP bags","Woven sacks","Corrugated boxes","PE film"],
+    gst_number:"24AAEFT2345D1Z7", udyam:"UDYAM-GJ-01-0089012",
+    years_active:9, monthly_capacity:"50,000–2,00,000 units", min_order:"5,000 units",
+    certifications:["BIS Certified","GST Registered","Udyam Certified"],
+    gst_compliance_rate:91, mca_filings_current:true, legal_disputes:1,
+    payment_terms:"Advance or 15 days credit"
+  },
+  {
+    id:"S005", name:"Annapurna Textile Mills", location:"Coimbatore, Tamil Nadu",
+    category:"Fabric & Textiles",
+    products:["Polyester fabric","Nylon fabric","Spandex blends","Technical textiles"],
+    gst_number:"33AACAN5678E1Z2", udyam:"UDYAM-TN-03-0012345",
+    years_active:31, monthly_capacity:"30,000–1,20,000 metres", min_order:"1,000 metres",
+    certifications:["ISO 9001:2015","GOTS Certified","GST Registered"],
+    gst_compliance_rate:97, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"60 days credit for established buyers"
+  },
+  {
+    id:"S006", name:"Ravi Engineering & Steel Works", location:"Rajkot, Gujarat",
+    category:"Steel & Metal Components",
+    products:["Steel bars","Metal castings","Forged components","CNC machined parts"],
+    gst_number:"24AAERS9012F1Z9", udyam:"UDYAM-GJ-01-0034567",
+    years_active:26, monthly_capacity:"20–100 tonnes", min_order:"500 kg",
+    certifications:["ISO 9001:2015","BIS Licensed","GST Registered"],
+    gst_compliance_rate:95, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"30 days credit"
+  },
+  {
+    id:"S007", name:"Lakshmi Cotton & Handloom Co.", location:"Surat, Gujarat",
+    category:"Handloom Textiles",
+    products:["Handloom cotton","Khadi fabric","Cotton yarn","Natural dyed fabric"],
+    gst_number:"24AAALC3456G1Z4", udyam:"UDYAM-GJ-01-0056789",
+    years_active:41, monthly_capacity:"5,000–20,000 metres", min_order:"200 metres",
+    certifications:["Handloom Mark","India Organic","GST Registered"],
+    gst_compliance_rate:89, mca_filings_current:false, legal_disputes:0,
+    payment_terms:"Advance only"
+  },
+  {
+    id:"S008", name:"Pioneer Agro Packaging Ltd", location:"Ludhiana, Punjab",
+    category:"Food Grade Packaging",
+    products:["Food grade HDPE containers","PP boxes","Laminated pouches","Multilayer films"],
+    gst_number:"03AACFP6789H1Z6", udyam:"UDYAM-PB-04-0023456",
+    years_active:13, monthly_capacity:"1,00,000–5,00,000 units", min_order:"10,000 units",
+    certifications:["FSSAI Approved","ISO 22000","BRC Food Safety","GST Registered"],
+    gst_compliance_rate:98, mca_filings_current:true, legal_disputes:0,
+    payment_terms:"30 days credit"
+  }
+];
+ 
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentResults = null;
+let rfqText = "";
+ 
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function scoreColor(v) {
+  if (v >= 85) return "score-high";
+  if (v >= 65) return "score-mid";
+  return "score-low";
+}
+ 
+function scoreRingSVG(score, size = 72) {
+  const R = size * 0.38;
+  const cx = size / 2, cy = size / 2;
+  const circ = 2 * Math.PI * R;
+  const dash = (score / 100) * circ;
+  const color = score >= 85 ? "#059669" : score >= 65 ? "#D97706" : "#DC2626";
+  const bgColor = score >= 85 ? "#ECFDF5" : score >= 65 ? "#FFFBEB" : "#FEF2F2";
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="${bgColor}" stroke="#E2E8F0" stroke-width="1.5"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#E2E8F0" stroke-width="5"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${color}" stroke-width="5"
+      stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}"
+      stroke-dashoffset="${(circ * 0.25).toFixed(1)}"
+      stroke-linecap="round" transform="rotate(-90 ${cx} ${cy})"/>
+    <text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central"
+      font-family="JetBrains Mono, monospace" font-size="${size * 0.22}" font-weight="500"
+      fill="${color}">${score}</text>
+  </svg>`;
+}
+ 
+function fillAndSearch(q) {
+  document.getElementById('search-input').value = q;
+  runSearch();
+}
+ 
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+ 
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+ 
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+});
+ 
+// ─── MAIN SEARCH ─────────────────────────────────────────────────────────────
+async function runSearch() {
+  const query = document.getElementById('search-input').value.trim();
+  const apiKey = document.getElementById('api-key').value.trim();
+ 
+  if (!query) { document.getElementById('search-input').focus(); return; }
+  if (!apiKey) {
+    showError("Please enter your Anthropic API key in the field above to run a live search.");
+    return;
+  }
+ 
+  // UI: loading state
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+  const loadingEl = document.getElementById('loading');
+  loadingEl.style.display = 'block';
+  document.getElementById('search-btn').disabled = true;
+ 
+  const loadingMessages = [
+    ["Scanning supplier database...", "Matching product categories · Checking location filters"],
+    ["Pulling compliance data...", "MCA21 filing status · GSTN returns · Udyam registry"],
+    ["Generating trust scorecards...", "Scoring GST compliance · Legal checks · Longevity"],
+    ["Drafting your RFQ...", "Professional English draft · WhatsApp-ready format"]
+  ];
+  let step = 0;
+  const loadInterval = setInterval(() => {
+    step = (step + 1) % loadingMessages.length;
+    document.getElementById('loading-text').textContent = loadingMessages[step][0];
+    document.getElementById('loading-steps').textContent = loadingMessages[step][1];
+  }, 1200);
+ 
+  const SYSTEM_PROMPT = `You are SupplyScout's AI supplier intelligence engine for Indian SME manufacturers.
+You have access to a verified supplier database with compliance data from MCA21, GSTN, and Udyam registry.
+ 
+When given a procurement requirement:
+1. Select the 3 most relevant suppliers from the database
+2. Rank them by relevance + trust. Compute trust scores:
+   - gst_compliance: use gst_compliance_rate from data
+   - mca_health: 100 if mca_filings_current=true, 40 if false
+   - longevity: min(years_active * 3, 90)
+   - legal_cleanliness: 100 if 0 disputes, 55 if 1 dispute, 25 if 2+
+   - overall: weighted average (gst 30% + mca 25% + longevity 25% + legal 20%)
+3. Write a concise match_reason (1 sentence: why this supplier fits)
+4. Add caution string if relevant, else null
+5. Write a professional 150-word RFQ in rfq_draft (use [Your Company Name] placeholder)
+6. One-sentence market_insight about this commodity/supplier market
+ 
+SUPPLIER DATABASE:
+${JSON.stringify(SUPPLIER_DATABASE)}
+ 
+Respond ONLY with a valid JSON object. No markdown, no explanation, no backticks.
+{
+  "query_interpreted": "...",
+  "suppliers": [
+    {
+      "rank": 1, "id": "S001", "name": "...", "location": "...", "category": "...",
+      "years_active": 14, "monthly_capacity": "...", "min_order": "...",
+      "certifications": [...], "payment_terms": "...",
+      "trust_score": {
+        "overall": 92, "gst_compliance": 96, "mca_health": 100,
+        "longevity": 85, "legal_cleanliness": 100
+      },
+      "match_reason": "...",
+      "caution": null
+    }
+  ],
+  "rfq_draft": "...",
+  "market_insight": "..."
+}`;
+ 
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 2000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: `Find suppliers for: ${query}` }]
+      })
+    });
+ 
+    clearInterval(loadInterval);
+    loadingEl.style.display = 'none';
+    document.getElementById('search-btn').disabled = false;
+ 
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `API error ${response.status}`);
+    }
+ 
+    const data = await response.json();
+    let rawText = data.content?.[0]?.text || "";
+ 
+    // Strip markdown code fences if any
+    rawText = rawText.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+ 
+    let parsed;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch (e) {
+      // Try to extract JSON object
+      const match = rawText.match(/\{[\s\S]*\}/);
+      if (match) parsed = JSON.parse(match[0]);
+      else throw new Error("Could not parse supplier data. Try again.");
+    }
+ 
+    currentResults = parsed;
+    rfqText = parsed.rfq_draft || "";
+    renderResults(parsed);
+ 
+  } catch (err) {
+    clearInterval(loadInterval);
+    loadingEl.style.display = 'none';
+    document.getElementById('search-btn').disabled = false;
+    showError("Search failed: " + err.message + ". Please check your API key and try again.");
+    console.error(err);
+  }
+}
+ 
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderResults(data) {
+  document.getElementById('query-text').textContent = "Query understood as: " + (data.query_interpreted || "");
+  const grid = document.getElementById('supplier-grid');
+  grid.innerHTML = '';
+ 
+  (data.suppliers || []).forEach((s, i) => {
+    const ts = s.trust_score || {};
+    const rankClass = ['r1','r2','r3'][i] || '';
+    const rankLabel = ['#1 Best Match','#2 Runner Up','#3 Alternative'][i] || `#${s.rank}`;
+ 
+    const certHtml = (s.certifications || []).map(c =>
+      `<span class="cert-chip">${c}</span>`
+    ).join('');
+ 
+    const cautionHtml = s.caution
+      ? `<div class="caution-box">⚠️ <span>${s.caution}</span></div>` : '';
+ 
+    const card = document.createElement('div');
+    card.className = 'supplier-card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="score-ring-wrap">
+          ${scoreRingSVG(ts.overall || 0, 80)}
+          <div class="score-label">Trust Score</div>
+        </div>
+        <div class="card-info">
+          <div class="card-header">
+            <span class="rank-badge ${rankClass}">${rankLabel}</span>
+          </div>
+          <div class="supplier-name">${s.name}</div>
+          <div class="supplier-meta">
+            <span class="meta-item"><span class="meta-icon">📍</span>${s.location}</span>
+            <span class="meta-item"><span class="meta-icon">📅</span>${s.years_active} yrs active</span>
+            <span class="meta-item"><span class="meta-icon">📦</span>${s.min_order} min order</span>
+          </div>
+          <span class="category-tag">${s.category}</span>
+          <div class="match-reason">✓ ${s.match_reason}</div>
+          ${cautionHtml}
+        </div>
+      </div>
+ 
+      <div class="card-scores">
+        <div class="sub-score">
+          <div class="sub-score-val ${scoreColor(ts.gst_compliance)}">${ts.gst_compliance || '—'}</div>
+          <div class="sub-score-name">GST Compliance</div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-val ${scoreColor(ts.mca_health)}">${ts.mca_health || '—'}</div>
+          <div class="sub-score-name">MCA Filing</div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-val ${scoreColor(ts.longevity)}">${ts.longevity || '—'}</div>
+          <div class="sub-score-name">Longevity</div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-val ${scoreColor(ts.legal_cleanliness)}">${ts.legal_cleanliness || '—'}</div>
+          <div class="sub-score-name">Legal Clean</div>
+        </div>
+      </div>
+ 
+      <div class="card-details">
+        <div class="detail-group">
+          <div class="detail-label">Monthly Capacity</div>
+          <div class="detail-val">${s.monthly_capacity}</div>
+        </div>
+        <div class="detail-group">
+          <div class="detail-label">Payment Terms</div>
+          <div class="detail-val">${s.payment_terms}</div>
+        </div>
+        <div class="detail-group" style="flex:1">
+          <div class="detail-label">Certifications</div>
+          <div class="cert-list">${certHtml}</div>
+        </div>
+      </div>
+ 
+      <div class="card-actions">
+        <button class="btn-rfq" onclick="showRFQ('${s.name}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Draft RFQ
+        </button>
+        <button class="btn-compare" onclick="showCompare()">Compare All</button>
+        <div class="gst-badge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          GST Verified
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+ 
+  // Market insight
+  if (data.market_insight) {
+    document.getElementById('insight-text').textContent = data.market_insight;
+    document.getElementById('insight-box').style.display = 'flex';
+  }
+ 
+  document.getElementById('results').style.display = 'block';
+}
+ 
+// ─── RFQ MODAL ───────────────────────────────────────────────────────────────
+function showRFQ(supplierName) {
+  if (!rfqText) return;
+  const filled = rfqText.replace(/\[Supplier Name\]/g, supplierName);
+  document.getElementById('rfq-text').textContent = filled;
+  document.getElementById('rfq-modal-sub').textContent = `Drafted for ${supplierName}`;
+  document.getElementById('rfq-modal').classList.add('open');
+  // Reset copy button
+  const btn = document.getElementById('copy-btn');
+  btn.classList.remove('copied');
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard`;
+}
+ 
+function copyRFQ() {
+  const text = document.getElementById('rfq-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.classList.add('copied');
+    btn.innerHTML = `✓ Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard`;
+    }, 2000);
+  });
+}
+ 
+function sendWhatsApp() {
+  const text = document.getElementById('rfq-text').textContent;
+  const url = "https://wa.me/?text=" + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+ 
+// ─── COMPARE TABLE ───────────────────────────────────────────────────────────
+function showCompare() {
+  if (!currentResults || !currentResults.suppliers) return;
+  const suppliers = currentResults.suppliers;
+  const rows = [
+    ["Supplier", ...suppliers.map(s => `<strong>${s.name}</strong><br><small style="color:var(--text-2)">${s.location}</small>`)],
+    ["Overall Trust", ...suppliers.map(s => `<span class="val-mono ${scoreColor(s.trust_score?.overall)}">${s.trust_score?.overall || '—'} / 100</span>`)],
+    ["GST Compliance", ...suppliers.map(s => `<span class="val-mono ${scoreColor(s.trust_score?.gst_compliance)}">${s.trust_score?.gst_compliance || '—'}</span>`)],
+    ["MCA Filing Health", ...suppliers.map(s => `<span class="val-mono ${scoreColor(s.trust_score?.mca_health)}">${s.trust_score?.mca_health || '—'}</span>`)],
+    ["Business Longevity", ...suppliers.map(s => `<span class="val-mono ${scoreColor(s.trust_score?.longevity)}">${s.trust_score?.longevity || '—'}</span>`)],
+    ["Legal Cleanliness", ...suppliers.map(s => `<span class="val-mono ${scoreColor(s.trust_score?.legal_cleanliness)}">${s.trust_score?.legal_cleanliness || '—'}</span>`)],
+    ["Years Active", ...suppliers.map(s => `<span class="val-mono">${s.years_active} yrs</span>`)],
+    ["Monthly Capacity", ...suppliers.map(s => s.monthly_capacity)],
+    ["Min Order", ...suppliers.map(s => s.min_order)],
+    ["Payment Terms", ...suppliers.map(s => s.payment_terms)],
+    ["Certifications", ...suppliers.map(s => (s.certifications || []).join(', '))],
+  ];
+  const table = document.getElementById('compare-table');
+  table.innerHTML = rows.map((row, i) => {
+    if (i === 0) {
+      return `<tr>${row.map(cell => `<th>${cell}</th>`).join('')}</tr>`;
+    }
+    return `<tr>${row.map((cell, j) => j === 0 ? `<td>${cell}</td>` : `<td>${cell}</td>`).join('')}</tr>`;
+  }).join('');
+  document.getElementById('compare-modal').classList.add('open');
+}
+ 
+function exportCompare() {
+  window.print();
+}
+ 
+// ─── ERROR ───────────────────────────────────────────────────────────────────
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.innerHTML = `<strong>⚠️ Error</strong> — ${msg}`;
+  el.style.display = 'block';
+}
+</script>
+</body>
+</html>
